@@ -64,8 +64,6 @@ describe 'Jenkins Build Lookup' => sub {
 
         is_deeply( $result, $expected );
     };
-
-
 };
 
 sub mock_config {

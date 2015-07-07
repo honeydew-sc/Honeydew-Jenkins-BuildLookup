@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use feature qw/state/;
-use DBD::MySQL;
 use Honeydew::Config;
 use HTTP::Tiny;
 use JSON;
