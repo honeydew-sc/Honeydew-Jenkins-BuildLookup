@@ -1,5 +1,6 @@
 package Honeydew::Jenkins::BuildLookup;
 
+# ABSTRACT: Look up branches for build numbers on Jenkins
 use strict;
 use warnings;
 

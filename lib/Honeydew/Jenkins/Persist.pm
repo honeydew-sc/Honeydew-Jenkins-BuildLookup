@@ -1,5 +1,7 @@
 package Honeydew::Jenkins::Persist;
 
+# ABSTRACT: Persist build-branch data to a mysql table
+
 use Cwd qw/abs_path/;
 use File::Basename qw/dirname/;
 use DBI;
