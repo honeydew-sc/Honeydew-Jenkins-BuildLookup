@@ -60,20 +60,32 @@ sub get_builds {
     my ($self, %args) = @_;
 
     my $url = $self->_get_runner_url( %args );
-    my $builds = $self->__get_json( url => $url );
+    my $builds = $self->_get_json( url => $url );
 }
 
-sub __get_json {
+sub is_build_successful {
+    my ($self, %build) = @_;
+
+    my $url = $build{url};
+
+    my $status_url = $url . 'api/json?tree=result';
+    my $content = $self->_get_json( url => $status_url);
+
+    my $build_status = $content->{result} eq 'SUCCESS';
+    return $build_status
+}
+
+sub _get_json {
     my ($self, %args) = @_;
     my $ua = $self->ua;
 
-    my $options = $self->__get_jenkins_headers;
+    my $options = $self->_get_jenkins_headers;
 
     my $res = $ua->get( $args{url}, $options );
     return from_json( $res->{content} );
 }
 
-sub __get_jenkins_headers {
+sub _get_jenkins_headers {
     my ($self) = @_;
 
     state $options = {
