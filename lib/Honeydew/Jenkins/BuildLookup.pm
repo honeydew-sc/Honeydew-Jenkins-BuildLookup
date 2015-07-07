@@ -49,6 +49,13 @@ has jenkins_auth => (
     }
 );
 
+has build_runners => (
+    is => 'lazy',
+    default => sub {
+        return [ qw'Sharecare-Build-Runner' ]
+    }
+);
+
 has ua => (
     is => 'lazy',
     default => sub {
@@ -56,16 +63,46 @@ has ua => (
     }
 );
 
+sub get_build_branches {
+    my ($self) = @_;
+
+    my @runners = @{ $self->build_runners };
+
+    my @branches;
+    foreach my $runner (@runners) {
+        my $builds = $self->get_builds( runner => $runner );
+
+        my @build_branches = map {
+            my ( $branch, $build_number ) = $self->parse_build_log( %{ $_ } );
+
+            my $ret = {
+                branch => $branch,
+                build_number => $build_number,
+                count => $_->{number}
+            };
+
+            $ret
+        } grep {
+            $self->is_build_successful( %{ $_ } )
+        } @$builds;
+
+        push @branches, @build_branches;
+    }
+
+    return \@branches;
+}
+
 sub get_builds {
     my ($self, %args) = @_;
 
     my $url = $self->_get_runner_url( %args );
     my $builds = $self->_get_json( url => $url );
+
+    return $builds;
 }
 
 sub is_build_successful {
     my ($self, %build) = @_;
-
     my $url = $build{url};
 
     my $status_url = $url . 'api/json?tree=result';
@@ -75,20 +112,50 @@ sub is_build_successful {
     return $build_status
 }
 
+sub parse_build_log {
+    my ($self, %build) = @_;
+    my $log = $self->get_build_log( %build );
+
+    my ($branch, $build_number);
+    if ($log =~ /Checking out Revision .*\(origin\/(.*)\)/) {
+        $branch = $1;
+    }
+
+    if ($log =~ /\/builds\/sharecare\/rc\/(.*\d{4})/) {
+        $build_number = $1 . "";
+    }
+
+    return ( $branch, $build_number );
+}
+
+sub get_build_log {
+    my ($self, %build) = @_;
+
+    my $url = $build{url};
+    my $console_url = $url . 'logText/progressiveText?start=0';
+    return $self->_get_url( url => $console_url );
+}
+
 sub _get_json {
     my ($self, %args) = @_;
-    my $ua = $self->ua;
 
-    my $options = $self->_get_jenkins_headers;
+    return from_json( $self->_get_url( %args ) );
+}
+
+sub _get_url {
+    my ($self, %args) = @_;
+
+    my $ua = $self->ua;
+    state $options = $self->_get_jenkins_headers;
 
     my $res = $ua->get( $args{url}, $options );
-    return from_json( $res->{content} );
+    return $res->{content};
 }
 
 sub _get_jenkins_headers {
     my ($self) = @_;
 
-    state $options = {
+    my $options = {
         headers => {
             Authorization => 'Basic ' . $self->jenkins_auth
         }
