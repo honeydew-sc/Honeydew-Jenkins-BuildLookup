@@ -48,7 +48,7 @@ sub add_build_branch {
 
     my $fields = join( ',',  @fields);
     my $values = join( ',', ('?') x (scalar @fields) );
-    my $sql = "INSERT INTO `jenkins` ($fields) VALUES ($values)";
+    my $sql = "INSERT IGNORE INTO `jenkins` ($fields) VALUES ($values)";
     my $sth = $dbh->prepare( $sql );
     $sth->execute( @values );
 
