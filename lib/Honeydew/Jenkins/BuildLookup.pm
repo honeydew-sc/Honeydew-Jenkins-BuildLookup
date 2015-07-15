@@ -84,7 +84,7 @@ sub get_build_branches {
             $ret
         } grep {
             $self->is_build_successful( %{ $_ } )
-        } @$builds;
+        } @{ $builds->{builds } };
 
         push @branches, @build_branches;
     }

@@ -25,7 +25,7 @@ describe 'Jenkins Build Lookup' => sub {
     it 'should get builds for a runner' => sub {
         mock_builds( $mock_ua );
         my $build_data = $jenkins->get_builds( runner => 'test-runner' );
-        is( $build_data->[0]->{number}, 3033 );
+        is( $build_data->{builds}->[0]->{number}, 3033 );
     };
 
     it 'should check if builds are successful' => sub {
@@ -88,10 +88,10 @@ sub mock_builds {
 }
 
 sub mock_builds_content {
-    return [{
+    return { builds => [{
         number => 3033,
         url => 'jenkins_base_url/job/Sharecare-Build-Runner/3033/'
-    }];
+    }] };
 }
 
 sub mock_build_result {
