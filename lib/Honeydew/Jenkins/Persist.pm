@@ -6,25 +6,23 @@ use Cwd qw/abs_path/;
 use File::Basename qw/dirname/;
 use DBI;
 use Moo;
+use Honeydew::Config;
 
 has dbh => (
     is => 'lazy',
     default => sub {
         my ($self) = @_;
-        my $db_settings = $self->config->{mysql};
-
-        my $dbh = DBI->connect(
-            "DBI:mysql:database=" . $db_settings->{database} . ";" .
-            "host=" . $db_settings->{host},
-            $db_settings->{username},
-            $db_settings->{password},
-            { RaiseError => 1 }
-        );
-
+        my $dbh = DBI->connect( $self->config->mysql_dsn );
         return $dbh;
     }
 );
 
+has config => (
+    is => 'lazy',
+    default => sub {
+        return Honeydew::Config->instance;
+    }
+);
 
 sub create_table {
     my ($self) = @_;
