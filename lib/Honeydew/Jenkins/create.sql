@@ -4,5 +4,5 @@ create table `jenkins` (
     `count` integer unsigned,
     `build_number` varchar(64),
     PRIMARY KEY (`id`),
-    KEY `build_number_idx` (`build_number`)
+    UNIQUE KEY `build_number_idx` (`build_number`)
 );
