@@ -20,7 +20,7 @@ Prints to STDOUT your current crontab with the L<Honeydew::Jenkins::BuildLookup>
 
 my $crontab = [
     '# look up the jenkins build numbers every now and then',
-    '0/30 * * * * source ~/.bashrc; hd-jenkins-lookup'
+    '0,30 * * * * source ~/.bashrc; hd-jenkins-lookup'
 ];
 
 say $_ for @{ add_crontab_section( 'jenkins', $crontab ) };
