@@ -41,6 +41,7 @@ sub create_table {
 
 sub add_build_branch {
     my ($self, %build) = @_;
+    return unless $build{build_number};
     my $dbh = $self->dbh;
 
     my @fields = qw/branch count build_number/;
