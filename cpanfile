@@ -3,6 +3,7 @@ requires "DBI" => "0";
 requires "File::Basename" => "0";
 requires "HTTP::Tiny" => "0";
 requires "Honeydew::Config" => "0";
+requires "Honeydew::ExternalServices::Crontab" => "0";
 requires "JSON" => "0";
 requires "MIME::Base64" => "0";
 requires "Moo" => "0";
