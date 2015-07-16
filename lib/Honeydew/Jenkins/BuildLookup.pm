@@ -51,7 +51,11 @@ has jenkins_auth => (
 has build_runners => (
     is => 'lazy',
     default => sub {
-        return [ qw'Sharecare-Build-Runner' ]
+        return [ qw/
+                       Sharecare-Build-Runner
+                       Jedi-BuildRunner
+                       SG1-BuildRunner
+                   / ]
     }
 );
 
