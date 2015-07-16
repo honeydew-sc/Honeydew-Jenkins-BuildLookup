@@ -6,7 +6,7 @@ Honeydew::Jenkins::BuildLookup - Look up branches for build numbers on Jenkins
 
 # VERSION
 
-version 0.01
+version 0.02
 
 # SYNOPSIS
 
