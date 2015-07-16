@@ -7,5 +7,4 @@ use warnings;
 use Honeydew::Jenkins::BuildLookup;
 
 my $jenkins = Honeydew::Jenkins::BuildLookup->new;
-my $build_branches = $jenkins->get_build_branches;
-$jenkins->store_build_branches( $build_branches );
+$jenkins->do_lookup;
