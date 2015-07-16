@@ -128,7 +128,7 @@ sub is_build_successful {
     my $status_url = $url . 'api/json?tree=result';
     my $content = $self->_get_json( url => $status_url);
 
-    my $build_status = $content->{result} eq 'SUCCESS';
+    my $build_status = $content->{result} && $content->{result} eq 'SUCCESS';
     return $build_status
 }
 
