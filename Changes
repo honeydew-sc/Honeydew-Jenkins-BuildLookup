@@ -1,4 +1,7 @@
 Revision history for perl module Honeydew-Jenkins-BuildLookup
 
+0.02 2015-07-16
+ - Fix minute interval in crontab shell executable
+
 0.01 2015-07-07
  - Release initial version of Jenkins Build lookup scripts
