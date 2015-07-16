@@ -6,12 +6,11 @@ use warnings;
 
 use feature qw/state/;
 use Honeydew::Config;
+use Honeydew::Jenkins::Persist;
 use HTTP::Tiny;
 use JSON;
 use MIME::Base64;
 use Moo;
-
-# ABSTRACT:
 
 =for markdown [![Build Status](https://travis-ci.org/honeydew-sc/Honeydew-Jenkins-BuildLookup.svg?branch=master)](https://travis-ci.org/honeydew-sc/Honeydew-Jenkins-BuildLookup)
 
@@ -62,6 +61,27 @@ has ua => (
         return HTTP::Tiny->new;
     }
 );
+
+has db => (
+    is => 'lazy',
+    default => sub {
+        return Honeydew::Jenkins::Persist->new;
+    }
+);
+
+sub do_lookup {
+    my ($self) = @_;
+    my $builds = $self->get_build_branches;
+    $self->store_build_branches( $builds );
+}
+
+sub store_build_branches {
+    my ($self, $builds) = @_;
+
+    foreach my $record ( @$builds ) {
+        $self->db->add_build_branch( %$record );
+    }
+}
 
 sub get_build_branches {
     my ($self) = @_;
