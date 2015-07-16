@@ -1,0 +1,26 @@
+#! /usr/bin/perl
+
+# PODNAME: hd-crontab-jenkins
+# ABSTRACT: append Honeydew::Jenkins::BuildLookup business to your crontab
+use strict;
+use warnings;
+use feature qw/say/;
+use Honeydew::ExternalServices::Crontab qw/add_crontab_section/;
+
+=head1 SYNOPSIS
+
+    $ hd-crontab-jenkins
+    $ hd-crontab-jenkins | crontab
+
+=head1 DESCRIPTION
+
+Prints to STDOUT your current crontab with the L<Honeydew::Jenkins::BuildLookup> business appended to the end of it. Pipe it to crontab to persist.
+
+=cut
+
+my $crontab = [
+    '# look up the jenkins build numbers every now and then',
+    '0/30 * * * * source ~/.bashrc; hd-jenkins-lookup'
+];
+
+say $_ for @{ add_crontab_section( 'jenkins', $crontab ) };
