@@ -1,5 +1,8 @@
 Revision history for perl module Honeydew-Jenkins-BuildLookup
 
+0.03 2015-07-20
+ - Replace HTTP::Tiny with LWP::UserAgent
+
 0.02 2015-07-16
  - Fix minute interval in crontab shell executable
 
