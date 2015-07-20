@@ -7,7 +7,7 @@ use warnings;
 use feature qw/state/;
 use Honeydew::Config;
 use Honeydew::Jenkins::Persist;
-use HTTP::Tiny;
+use LWP::UserAgent;
 use JSON;
 use MIME::Base64;
 use Moo;
@@ -62,7 +62,7 @@ has build_runners => (
 has ua => (
     is => 'lazy',
     default => sub {
-        return HTTP::Tiny->new;
+        return LWP::UserAgent->new;
     }
 );
 
