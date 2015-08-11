@@ -62,7 +62,12 @@ has build_runners => (
 has ua => (
     is => 'lazy',
     default => sub {
-        return LWP::UserAgent->new;
+        my ($self) = @_;
+        my $headers = $self->_get_jenkins_headers;
+        my $ua = LWP::UserAgent->new;
+        $ua->default_header( %$headers );
+
+        return $ua;
     }
 );
 
@@ -170,22 +175,17 @@ sub _get_url {
     my ($self, %args) = @_;
 
     my $ua = $self->ua;
-    state $options = $self->_get_jenkins_headers;
+    my $res = $ua->get( $args{url} );
 
-    my $res = $ua->get( $args{url}, $options );
-    return $res->{content};
+    return $res->content;
 }
 
 sub _get_jenkins_headers {
     my ($self) = @_;
 
-    my $options = {
-        headers => {
-            Authorization => 'Basic ' . $self->jenkins_auth
-        }
+    return {
+        Authorization => 'Basic ' . $self->jenkins_auth
     };
-
-    return $options;
 }
 
 sub _get_runner_url {
