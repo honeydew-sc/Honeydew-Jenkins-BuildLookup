@@ -4,7 +4,7 @@ package Honeydew::Jenkins::BuildLookup;
 use strict;
 use warnings;
 
-use feature qw/state/;
+use feature qw/say state/;
 use Honeydew::Config;
 use Honeydew::Jenkins::Persist;
 use LWP::UserAgent;
@@ -103,6 +103,7 @@ sub get_build_branches {
 
         my @build_branches = map {
             my ( $branch, $build_number ) = $self->parse_build_log( %{ $_ } );
+            say $build_number . ', ' . $branch;
 
             my $ret = {
                 branch => $branch,
