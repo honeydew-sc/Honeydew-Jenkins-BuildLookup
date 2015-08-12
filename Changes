@@ -1,5 +1,8 @@
 Revision history for perl module Honeydew-Jenkins-BuildLookup
 
+0.04 2015-08-11
+ - Fix LWP::UserAgent basic auth bugs
+
 0.03 2015-07-20
  - Replace HTTP::Tiny with LWP::UserAgent
 
