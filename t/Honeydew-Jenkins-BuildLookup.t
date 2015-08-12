@@ -6,10 +6,11 @@ use Honeydew::Jenkins::BuildLookup;
 use Test::Spec;
 
 describe 'Jenkins Build Lookup' => sub {
-    my ($jenkins, $mock_ua);
+    my ($config, $jenkins, $mock_ua);
     before each => sub {
         $mock_ua = mock();
-        my $config = mock_config();
+        $config = mock_config();
+
         $jenkins = Honeydew::Jenkins::BuildLookup->new(
             ua => $mock_ua,
             config => $config,
@@ -63,6 +64,17 @@ describe 'Jenkins Build Lookup' => sub {
         }];
 
         is_deeply( $result, $expected );
+    };
+
+    it 'should add authorization headers to the default ua' => sub {
+        my $j = Honeydew::Jenkins::BuildLookup->new(
+            config => $config,
+            build_runners => [ 'test-runner' ]
+        );
+        my $ua = $j->ua;
+
+        my $auth = $ua->default_headers->{authorization};
+        is( $auth, 'Basic amVua2luc19hdXRo' );
     };
 };
 
