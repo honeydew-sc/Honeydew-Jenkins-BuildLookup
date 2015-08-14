@@ -51,6 +51,32 @@ describe 'MySQL Persistence' => sub {
 
         is_deeply( $ret, \%expected );
     };
+
+    it 'should determine which builds are new' => sub {
+        my @builds = (
+            {
+                branch => 'branch',
+                count => 1,
+                build_number => 'build1'
+            },
+            {
+                branch => 'branch',
+                count => 2,
+                build_number => 'build2'
+            }
+        );
+        $persist->add_build_branch( %$_ ) for @builds;
+
+        my $builds = [
+            { build_number => 'build1' },
+            { build_number => 'build2' },
+            { build_number => 'build3' }
+        ];
+
+        my $new = $persist->find_new_builds( $builds );
+        is_deeply( $new, [{ build_number => 'build3' }] );
+    };
+
 };
 
 runtests;

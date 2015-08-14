@@ -56,4 +56,26 @@ sub add_build_branch {
     return $sql;
 }
 
+sub find_new_builds {
+    my ($self, $builds) = @_;
+    return unless scalar @$builds;
+
+    my @build_numbers = map { $_->{build_number} } grep { $_->{build_number} }  @$builds;
+    my $fields = join(', ', map { '?' } @build_numbers );
+
+    my $sql = 'SELECT build_number FROM `jenkins` where build_number in ( ' . $fields . ' )';
+    my $dbh = $self->dbh;
+    my $sth = $dbh->prepare( $sql );
+    $sth->execute( @build_numbers );
+
+    my $ret = $sth->fetchall_hashref( 'build_number' );
+    my @found_builds = keys %$ret;
+
+    my %in_database = map { $_ => 1 } @found_builds;
+    return [ grep {
+        my $build_number = $_->{build_number};
+        not $in_database{$build_number}
+    } @$builds ]
+}
+
 1;

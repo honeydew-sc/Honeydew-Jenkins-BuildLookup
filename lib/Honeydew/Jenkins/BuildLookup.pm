@@ -87,7 +87,8 @@ sub do_lookup {
 sub store_build_branches {
     my ($self, $builds) = @_;
 
-    foreach my $record ( @$builds ) {
+    my $new_builds = $self->db->find_new_builds( $builds );
+    foreach my $record ( @$new_builds ) {
         $self->db->add_build_branch( %$record );
     }
 }
