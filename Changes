@@ -1,5 +1,8 @@
 Revision history for perl module Honeydew-Jenkins-BuildLookup
 
+0.05 2015-08-14
+ - Only persist new builds to the db
+
 0.04 2015-08-11
  - Fix LWP::UserAgent basic auth bugs
 
